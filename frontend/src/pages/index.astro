@@ -53,7 +53,9 @@ const pageTitle = "Linear Regression Demo";
   </main>
 
   <script type="module">
-    import { predict } from "../lib/api";
+    import { health, predict } from "../lib/api";
+
+    health().catch(() => { console.warn("Backend sleeping or unavailable"); });
 
     const form = document.getElementById("predict-form");
     const result = document.getElementById("result");
