@@ -52,7 +52,9 @@ const pageTitle = "Linear Regression Demo";
     </Card>
   </main>
 
-  <script>
+  <script type="module">
+    import { predict } from "../lib/api";
+
     const form = document.getElementById("predict-form");
     const result = document.getElementById("result");
 
@@ -67,18 +69,7 @@ const pageTitle = "Linear Regression Demo";
       result.textContent = "Loading...";
 
       try {
-        const response = await fetch(
-          "http://localhost:8000/predict",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ x })
-          }
-        );
-
-        const data = await response.json();
+        const data = await predict({ x });
 
         result.textContent =
           `Prediction: ${data.prediction}`;
