@@ -1,0 +1,91 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter
+} from "@/components/starwind/card";
+import { Input } from "@/components/starwind/input";
+import { Label } from "@/components/starwind/label";
+
+const pageTitle = "Linear Regression Demo";
+---
+
+<Layout title={pageTitle}>
+  <main class="container mx-auto flex min-h-screen items-center justify-center px-4">
+    <Card class="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Linear Regression Predictor</CardTitle>
+        <CardDescription>
+          Enter a value for x and get predicted y.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <form id="predict-form" class="grid gap-4">
+          <div class="grid gap-2">
+            <Label for="x-input">Input x</Label>
+
+            <Input
+              id="x-input"
+              name="x"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <Button type="submit">
+            Predict
+          </Button>
+        </form>
+      </CardContent>
+
+      <CardFooter>
+        <p id="result" class=""></p>
+      </CardFooter>
+    </Card>
+  </main>
+
+  <script>
+    const form = document.getElementById("predict-form");
+    const result = document.getElementById("result");
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const x = Number(
+        document.getElementById("x-input").value
+      );
+
+      result.classList.remove("hidden");
+      result.textContent = "Loading...";
+
+      try {
+        const response = await fetch(
+          "http://localhost:8000/predict",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ x })
+          }
+        );
+
+        const data = await response.json();
+
+        result.textContent =
+          `Prediction: ${data.prediction}`;
+      } catch {
+        result.textContent =
+          "Failed to connect to backend.";
+      }
+    });
+  </script>
+</Layout>
