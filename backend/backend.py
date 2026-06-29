@@ -7,8 +7,7 @@ app = FastAPI(title="ML Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["http://localhost:4321", "https://ioft-itr.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
