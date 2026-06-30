@@ -6,79 +6,288 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter
 } from "@/components/starwind/card";
 import { Input } from "@/components/starwind/input";
 import { Label } from "@/components/starwind/label";
+import { Spinner } from "@/components/starwind/spinner";
 
-const pageTitle = "Linear Regression Demo";
+const pageTitle = "Linear Regression Predictor";
 ---
 
 <Layout title={pageTitle}>
-  <main class="container mx-auto flex min-h-screen items-center justify-center px-4">
-    <Card class="w-full max-w-md">
+  <!-- ════════════════════════════════════════════════════════
+       HERO — Atmospheric sunset gradient
+       ════════════════════════════════════════════════════════ -->
+  <section
+    class="animate-sunset-drift relative overflow-hidden bg-gradient-to-br from-[#ff8105] via-[#fa520f] to-[#cc3a05] bg-[length:200%_200%]"
+  >
+    <!-- Subtle noise/dot overlay for depth -->
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,white_1px,transparent_1px)] bg-[length:16px_16px] opacity-[0.06]"></div>
+
+    <!-- Staggered content wrapper -->
+    <div
+      class="stagger-hero relative mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center sm:py-32 lg:py-40"
+    >
+      <h1
+        class="stagger-item font-serif text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl"
+      >
+        Linear Regression<br />Predictor
+      </h1>
+      <p
+        class="stagger-item mt-6 max-w-2xl text-balance text-lg text-white/80 sm:text-xl"
+      >
+        Enter any value of&nbsp;<var class="font-mono not-italic">x</var> and
+        get an instant prediction powered by a trained linear regression model.
+      </p>
+      <div class="stagger-item mt-10 flex flex-wrap justify-center gap-4">
+        <a
+          href="#predictor"
+          class="inline-flex h-11 items-center justify-center rounded-md bg-white px-6 text-sm font-medium text-[#1f1f1f] shadow-xs transition-all duration-150 ease-out hover:bg-white/90 active:scale-[0.96]"
+        >
+          Try it now
+        </a>
+        <a
+          href="#stats"
+          class="inline-flex h-11 items-center justify-center rounded-md border border-white/30 bg-transparent px-6 text-sm font-medium text-white transition-all duration-150 ease-out hover:bg-white/10 active:scale-[0.96]"
+        >
+          View model stats
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       PREDICTOR CARD — Cream surface per Mistral design
+       ════════════════════════════════════════════════════════ -->
+  <section
+    id="predictor"
+    class="mx-auto max-w-xl px-4 py-24 sm:py-32"
+  >
+    <Card
+      class="border-beige-deep bg-cream shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_2px_-1px_rgba(0,0,0,0.06),0px_2px_4px_0px_rgba(0,0,0,0.04)] dark:border-beige-deep dark:bg-surface-cream dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.08)]"
+    >
       <CardHeader>
-        <CardTitle>Linear Regression Predictor</CardTitle>
-        <CardDescription>
-          Enter a value for x and get predicted y.
+        <CardTitle class="font-serif text-3xl text-ink">Try it</CardTitle>
+        <CardDescription class="text-steel">
+          Enter a value for&nbsp;<code class="font-mono text-xs">x</code> and
+          get the predicted&nbsp;<code class="font-mono text-xs">y</code>.
         </CardDescription>
       </CardHeader>
 
       <CardContent>
-        <form id="predict-form" class="grid gap-4">
+        <form id="predict-form" class="grid gap-5">
           <div class="grid gap-2">
-            <Label for="x-input">Input x</Label>
-
+            <Label for="x-input" class="text-sm font-medium text-ink">
+              Input&nbsp;<var class="font-mono not-italic">x</var>
+            </Label>
             <Input
               id="x-input"
               name="x"
               type="number"
               step="any"
               required
+              placeholder="e.g., 7"
+              class="border-hairline-strong bg-white text-ink placeholder:text-muted focus-visible:border-primary focus-visible:ring-primary/30"
             />
           </div>
 
-          <Button type="submit">
+          <Button
+            type="submit"
+            variant="primary"
+            class="rounded-sm transition-all duration-150 ease-out active:scale-[0.96]"
+          >
             Predict
           </Button>
         </form>
       </CardContent>
 
-      <CardFooter>
-        <p id="result" class=""></p>
+      <CardFooter
+        id="result-footer"
+        class="flex-col items-start gap-3 border-beige-deep bg-cream-deeper/30 dark:border-beige-deep"
+      >
+        <div id="result" class="hidden w-full">
+          <!-- Populated by JS -->
+        </div>
+        <div
+          id="result-placeholder"
+          class="flex w-full items-center gap-2 text-sm text-steel"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-4 shrink-0"
+          >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            <line x1="9" x2="15" y1="10" y2="10" />
+            <line x1="12" x2="12" y1="7" y2="13" />
+          </svg>
+          <span>Submit a value to see the prediction</span>
+        </div>
       </CardFooter>
     </Card>
-  </main>
+  </section>
 
-  <script type="module">
+  <!-- ════════════════════════════════════════════════════════
+       MODEL STATS — Stat-display per Mistral design
+       ════════════════════════════════════════════════════════ -->
+  <section id="stats" class="mx-auto max-w-5xl px-4 pb-24 sm:pb-32">
+    <h2 class="font-serif text-4xl text-center text-ink">Model Parameters</h2>
+    <div class="mt-12 grid gap-8 sm:grid-cols-3">
+      <div class="stagger-item stat-cell text-center">
+        <p class="font-serif text-6xl leading-[1.1] tabular-nums text-primary sm:text-7xl">
+          2.0
+        </p>
+        <p class="mt-2 text-sm text-steel">Slope&nbsp;(coefficient)</p>
+      </div>
+      <div class="stagger-item stat-cell text-center">
+        <p class="font-serif text-6xl leading-[1.1] tabular-nums text-primary sm:text-7xl">
+          0.0
+        </p>
+        <p class="mt-2 text-sm text-steel">Intercept</p>
+      </div>
+      <div class="stagger-item stat-cell text-center">
+        <p class="font-serif text-6xl leading-[1.1] tabular-nums text-primary sm:text-7xl">
+          5
+        </p>
+        <p class="mt-2 text-sm text-steel">Training samples</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       CLIENT-SIDE SCRIPT
+       ════════════════════════════════════════════════════════ -->
+  <script>
     import { health, predict } from "../lib/api";
 
-    health().catch(() => { console.warn("Backend sleeping or unavailable"); });
+    // ── Warm up the backend (no-op if sleeping) ──
+    health().catch(() => {
+      console.warn("Backend sleeping or unavailable");
+    });
 
+    // ── DOM refs ──
     const form = document.getElementById("predict-form");
-    const result = document.getElementById("result");
+    const resultContainer = document.getElementById("result");
+    const resultPlaceholder = document.getElementById("result-placeholder");
+    const resultFooter = document.getElementById("result-footer");
+    const submitBtn = form?.querySelector('button[type="submit"]');
+    const inputEl = document.getElementById("x-input");
 
+    // ── Submit handler ──
     form?.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const x = Number(
-        document.getElementById("x-input").value
-      );
+      if (!inputEl) return;
+      const x = Number(inputEl.value);
 
-      result.classList.remove("hidden");
-      result.textContent = "Loading...";
+      // Guard: require input
+      if (isNaN(x)) return;
+
+      // Disable button + show loading
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          `<svg class="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="status" aria-label="Loading"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Predicting...`;
+      }
+
+      // Show result area
+      resultContainer?.classList.remove("hidden");
+      resultPlaceholder?.classList.add("hidden");
+
+      resultContainer.innerHTML =
+        `<div class="flex items-center gap-2 text-sm text-steel">
+          <svg class="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <span>Calculating…</span>
+        </div>`;
 
       try {
         const data = await predict({ x });
 
-        result.textContent =
-          `Prediction: ${data.prediction}`;
+        // ── Render result with tabular numbers ──
+        resultContainer.innerHTML =
+          `<div class="grid w-full gap-2 stagger-result">
+            <div class="flex items-baseline justify-between gap-4 stagger-result-item">
+              <span class="text-sm text-steel">Prediction&nbsp;<span class="font-mono text-xs">ŷ</span></span>
+              <span class="font-serif text-3xl tabular-nums text-ink">${Number(data.prediction).toFixed(4)}</span>
+            </div>
+            ${
+              data.confidence !== undefined
+                ? `<div class="flex items-baseline justify-between gap-4 stagger-result-item">
+                    <span class="text-sm text-steel">Confidence</span>
+                    <span class="font-mono text-sm tabular-nums text-ink">${(Number(data.confidence) * 100).toFixed(1)}%</span>
+                  </div>`
+                : ""
+            }
+            <div class="mt-1 flex items-baseline justify-between gap-4 stagger-result-item border-t border-hairline pt-2">
+              <span class="text-xs text-stone">Model: y = 2x</span>
+              <span class="text-xs text-stone">Input: <span class="font-mono tabular-nums">x = ${x}</span></span>
+            </div>
+          </div>`;
+
+        // Stagger result items with CSS
+        requestAnimationFrame(() => {
+          document.querySelectorAll(".stagger-result-item").forEach((el, i) => {
+            (el as HTMLElement).style.opacity = "0";
+            (el as HTMLElement).style.animation = `fade-in-up 0.35s ease-out ${i * 0.08}s forwards`;
+          });
+        });
       } catch {
-        result.textContent =
-          "Failed to connect to backend.";
+        resultContainer.innerHTML =
+          `<div class="flex items-center gap-2 text-sm text-error">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <span>Failed to connect to backend.</span>
+          </div>`;
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Predict";
+        }
       }
     });
   </script>
+
+  <style>
+    /* ── Hero stagger animations ── */
+    .stagger-hero .stagger-item {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(4px);
+    }
+
+    .stagger-hero .stagger-item:nth-child(1) {
+      animation: fade-in-up 0.5s ease-out 0.1s forwards;
+    }
+    .stagger-hero .stagger-item:nth-child(2) {
+      animation: fade-in-up 0.5s ease-out 0.2s forwards;
+    }
+    .stagger-hero .stagger-item:nth-child(3) {
+      animation: fade-in-up 0.5s ease-out 0.3s forwards;
+    }
+
+    /* ── Stat cell animations ── */
+    .stat-cell:nth-child(1) {
+      animation: fade-in-up 0.45s ease-out 0.15s forwards;
+    }
+    .stat-cell:nth-child(2) {
+      animation: fade-in-up 0.45s ease-out 0.25s forwards;
+    }
+    .stat-cell:nth-child(3) {
+      animation: fade-in-up 0.45s ease-out 0.35s forwards;
+    }
+
+    /* ── Result stagger items ── */
+    .stagger-result-item {
+      opacity: 0;
+    }
+  </style>
 </Layout>

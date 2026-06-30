@@ -9,13 +9,27 @@ const { title = "Default Title" } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+    <meta name="description" content="Linear Regression Predictor — powered by a trained ML model." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- Inter & Playfair Display (PP Editorial Old substitute) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Dark mode script -->
     <script is:inline>
       function initTheme() {
         const colorTheme = localStorage.getItem("colorTheme");
         if (!colorTheme) {
-          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
             document.documentElement.classList.add("dark");
             localStorage.setItem("colorTheme", "dark");
           } else {
@@ -28,7 +42,9 @@ const { title = "Default Title" } = Astro.props;
           } else if (colorTheme === "light") {
             document.documentElement.classList.remove("dark");
           } else if (colorTheme === "system") {
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            const prefersDark = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches;
             document.documentElement.classList.toggle("dark", prefersDark);
           }
         }
@@ -38,15 +54,38 @@ const { title = "Default Title" } = Astro.props;
 
       document.addEventListener("astro:after-swap", initTheme);
     </script>
-
   </head>
-  <body class="
-  min-h-screen
-  bg-zinc-950
-  text-zinc-100
-  antialiased
-    ">
-    <!-- Unique page content will be injected where the slot is -->
+  <body class="min-h-screen antialiased">
     <slot />
+
+    <!-- Sunset Stripe Band — Mistral AI's signature closing element -->
+    <div
+      class="h-2 bg-gradient-to-r from-[#fa520f] via-[#ffa110] via-[#ffd900] to-[#fff8e0] dark:from-[#fa520f] dark:via-[#ff8105] dark:via-[#cc3a05] dark:to-[#2c2c2c]"
+      role="presentation"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Footer -->
+    <footer class="bg-[#fff8e0] px-6 py-12 text-sm text-[#6a6a6a] dark:bg-[#2c2c2c] dark:text-[#a8a8a8]">
+      <div
+        class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row"
+      >
+        <p>
+          Powered by
+          <a
+            href="https://fastapi.tiangolo.com"
+            class="font-medium text-[#fa520f] hover:underline"
+            >FastAPI</a
+          >
+          +
+          <a
+            href="https://scikit-learn.org"
+            class="font-medium text-[#fa520f] hover:underline"
+            >scikit-learn</a
+          >
+        </p>
+        <p>Linear Regression Model &mdash; y = 2x</p>
+      </div>
+    </footer>
   </body>
 </html>
